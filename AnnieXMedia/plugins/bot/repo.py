@@ -1,4 +1,4 @@
-﻿# Authored By EchoX Networks © 2025
+﻿# Authored By Certified Coders © 2025
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from AnnieXMedia import app
@@ -26,7 +26,7 @@ async def show_repo(_, msg):
         ],
         [
             InlineKeyboardButton("🛠️ ꜱᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ", url="https://t.me/AbdulDevOfficialCommunity"),
-            InlineKeyboardButton("🎵 ᴜᴘᴅᴀᴛᴇs", url="https://t.me/AbdulBotzOfficial")
+            InlineKeyboardButton("🎵 ɢɪᴛʜᴜʙ", url="https://github.com/OGAbdulOfficial/EchoXMusic")
         ]
     ]
 

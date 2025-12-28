@@ -211,6 +211,21 @@ def download_with_ytdlp_sync(link: str, fmt: str) -> Optional[str]:
             ydl.download([link])
             return get_final_path_from_info(info)
     except Exception:
+        # Try fallback formats if the requested format isn't available
+        fallback_formats = ["bestaudio/best", "bestaudio", "best"]
+        for fb in fallback_formats:
+            try:
+                opts = get_ytdlp_base_opts()
+                opts["format"] = fb
+                LOGGER.warning(f"Requested format '{fmt}' failed, falling back to '{fb}'")
+                with YoutubeDL(opts) as ydl:
+                    info = ydl.extract_info(link, download=False)
+                    if path := get_final_path_from_info(info):
+                        return path
+                    ydl.download([link])
+                    return get_final_path_from_info(info)
+            except Exception:
+                continue
         return None
 
 

@@ -282,15 +282,17 @@ class Call:
             await auto_clean(popped)
             if not check:
                     await _clear_(chat_id)
-                    if chat_id in self.active_calls:
-                        try:
-                            await client.leave_call(chat_id)
-                        except NoActiveGroupCall:
-                            pass
-                        except Exception:
-                            pass
-                        finally:
-                            self.active_calls.discard(chat_id)
+                    # If configured to keep the assistant in the VC when idle, do not leave.
+                    if not config.KEEP_ASSISTANT_ON_IDLE:
+                        if chat_id in self.active_calls:
+                            try:
+                                await client.leave_call(chat_id)
+                            except NoActiveGroupCall:
+                                pass
+                            except Exception:
+                                pass
+                            finally:
+                                self.active_calls.discard(chat_id)
                     return
         except:
             try:

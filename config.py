@@ -54,6 +54,9 @@ SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/AbdulDevOfficialCommunity")
 AUTO_LEAVING_ASSISTANT = False
 AUTO_LEAVE_ASSISTANT_TIME = int(getenv("ASSISTANT_LEAVE_TIME", "3600"))
 
+# ── Keep assistant in VC when queue is empty (set to 'true' to keep)
+KEEP_ASSISTANT_ON_IDLE = getenv("KEEP_ASSISTANT_ON_IDLE", "False").lower() in ("1", "true", "yes")
+
 # ── Debug ──────────────────────────────────────────────────────────────────────
 DEBUG_IGNORE_LOG = True
 
