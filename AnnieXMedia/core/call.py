@@ -15,6 +15,7 @@ from pytgcalls.types import AudioQuality, ChatUpdate, MediaStream, StreamEnded, 
 import config
 from strings import get_string
 from AnnieXMedia import LOGGER, YouTube, app
+from AnnieXMedia.utils.downloader import yt_dlp_download
 from AnnieXMedia.misc import db
 from AnnieXMedia.utils.database import (
     add_active_chat,
@@ -246,8 +247,36 @@ class Call:
         except (NoActiveGroupCall, ChatAdminRequired):
             raise AssistantErr(_["call_8"])
         except NoAudioSourceFound:
+            # Try a fallback: download the audio locally via yt-dlp and retry
+            try:
+                title = await YouTube.title(link)
+                p = await yt_dlp_download(link, type="audio", title=title)
+                if p:
+                    LOGGER(__name__).info(f"No audio source: downloaded fallback audio {p} for {link}")
+                    stream = dynamic_media_stream(path=p, video=False)
+                    try:
+                        await assistant.play(chat_id, stream)
+                        return
+                    except Exception as e:
+                        LOGGER(__name__).warning(f"Fallback audio play failed: {e}")
+            except Exception as e:
+                LOGGER(__name__).warning(f"Audio fallback download failed: {e}")
             raise AssistantErr(_["call_11"])
         except NoVideoSourceFound:
+            # Try a fallback: download the video locally via yt-dlp and retry
+            try:
+                title = await YouTube.title(link)
+                p = await yt_dlp_download(link, type="video", title=title)
+                if p:
+                    LOGGER(__name__).info(f"No video source: downloaded fallback video {p} for {link}")
+                    stream = dynamic_media_stream(path=p, video=True)
+                    try:
+                        await assistant.play(chat_id, stream)
+                        return
+                    except Exception as e:
+                        LOGGER(__name__).warning(f"Fallback video play failed: {e}")
+            except Exception as e:
+                LOGGER(__name__).warning(f"Video fallback download failed: {e}")
             raise AssistantErr(_["call_12"])
         except (ConnectionNotFound, TelegramServerError):
             raise AssistantErr(_["call_10"])
