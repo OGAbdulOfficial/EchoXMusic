@@ -211,8 +211,13 @@ class YouTubeAPI:
                     f"for query/URL: '{prepared_link}'"
                 )
         except Exception as search_err:
+            # If the prepared link is not an actual URL, ask yt-dlp to perform
+            # a search using the `ytsearch1:` prefix so it doesn't treat the
+            # query string as an invalid URL.
+            ytdlp_target = prepared_link if prepared_link.startswith("http") else f"ytsearch1:{prepared_link}"
+
             stdout, stderr = await _exec_proc(
-                "yt-dlp", *(_cookies_args()), "--dump-json", "--no-warnings", prepared_link
+                "yt-dlp", *(_cookies_args()), "--dump-json", "--no-warnings", ytdlp_target
             )
 
             def _both_failed(details: str) -> ValueError:
@@ -228,6 +233,10 @@ class YouTubeAPI:
 
             try:
                 info = json.loads(stdout.decode())
+                # If we used a ytsearch wrapper, yt-dlp returns a 'entries' list
+                # with the search results; prefer the first entry as the info.
+                if not info.get("id") and isinstance(info.get("entries"), list) and info["entries"]:
+                    info = info["entries"][0]
             except json.JSONDecodeError as json_err:
                 raw = stdout.decode()[:400]
                 raise _both_failed(
