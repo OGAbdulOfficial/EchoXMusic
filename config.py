@@ -8,27 +8,35 @@ from pyrogram import filters
 load_dotenv()
 
 # ── Core bot config ────────────────────────────────────────────────────────────
-API_ID = int(getenv("API_ID", 27798659))
-API_HASH = getenv("API_HASH", "26100c77cee02e5e34b2bbee58440f86")
-BOT_TOKEN = getenv("BOT_TOKEN")
+def get_env_int(key, default):
+    val = getenv(key)
+    return int(val) if val and val.strip() else default
 
-OWNER_ID = int(getenv("OWNER_ID", 7044783841))
+def get_env_str(key, default=None):
+    val = getenv(key)
+    return val if val and val.strip() else default
+
+API_ID = get_env_int("API_ID", 27798659)
+API_HASH = get_env_str("API_HASH", "26100c77cee02e5e34b2bbee58440f86")
+BOT_TOKEN = get_env_str("BOT_TOKEN")
+
+OWNER_ID = get_env_int("OWNER_ID", 7044783841)
 OWNER_USERNAME = getenv("OWNER_USERNAME", "LoserNagiOfficial")
 BOT_USERNAME = getenv("BOT_USERNAME", "EchoXMusicBot")
 BOT_NAME = getenv("BOT_NAME", "EchoXMusicBot")
 ASSUSERNAME = getenv("ASSUSERNAME", "EchoXMusicBot")
 
 # ── Database & logging ─────────────────────────────────────────────────────────
-MONGO_DB_URI = getenv("MONGO_DB_URI")
-LOGGER_ID = int(getenv("LOGGER_ID", -1002014167331))
+MONGO_DB_URI = get_env_str("MONGO_DB_URI")
+LOGGER_ID = get_env_int("LOGGER_ID", -1002014167331)
 
 # ── Limits (durations in min/sec; sizes in bytes) ──────────────────────────────
-DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 300))
-SONG_DOWNLOAD_DURATION = int(getenv("SONG_DOWNLOAD_DURATION", "1200"))
-SONG_DOWNLOAD_DURATION_LIMIT = int(getenv("SONG_DOWNLOAD_DURATION_LIMIT", "1800"))
-TG_AUDIO_FILESIZE_LIMIT = int(getenv("TG_AUDIO_FILESIZE_LIMIT", "157286400"))
-TG_VIDEO_FILESIZE_LIMIT = int(getenv("TG_VIDEO_FILESIZE_LIMIT", "1288490189"))
-PLAYLIST_FETCH_LIMIT = int(getenv("PLAYLIST_FETCH_LIMIT", "30"))
+DURATION_LIMIT_MIN = get_env_int("DURATION_LIMIT", 300)
+SONG_DOWNLOAD_DURATION = get_env_int("SONG_DOWNLOAD_DURATION", 1200)
+SONG_DOWNLOAD_DURATION_LIMIT = get_env_int("SONG_DOWNLOAD_DURATION_LIMIT", 1800)
+TG_AUDIO_FILESIZE_LIMIT = get_env_int("TG_AUDIO_FILESIZE_LIMIT", 157286400)
+TG_VIDEO_FILESIZE_LIMIT = get_env_int("TG_VIDEO_FILESIZE_LIMIT", 1288490189)
+PLAYLIST_FETCH_LIMIT = get_env_int("PLAYLIST_FETCH_LIMIT", 30)
 
 # ── External APIs ──────────────────────────────────────────────────────────────
 COOKIE_URL = getenv("COOKIE_URL")  # required (paste link)
@@ -52,10 +60,10 @@ SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/AbdulDevOfficialCommunity")
 
 # ── Assistant auto-leave ───────────────────────────────────────────────────────
 AUTO_LEAVING_ASSISTANT = False
-AUTO_LEAVE_ASSISTANT_TIME = int(getenv("ASSISTANT_LEAVE_TIME", "3600"))
+AUTO_LEAVE_ASSISTANT_TIME = get_env_int("ASSISTANT_LEAVE_TIME", 3600)
 
 # ── Keep assistant in VC when queue is empty (set to 'true' to keep)
-KEEP_ASSISTANT_ON_IDLE = getenv("KEEP_ASSISTANT_ON_IDLE", "False").lower() in ("1", "true", "yes")
+KEEP_ASSISTANT_ON_IDLE = get_env_str("KEEP_ASSISTANT_ON_IDLE", "False").lower() in ("1", "true", "yes")
 
 # ── Debug ──────────────────────────────────────────────────────────────────────
 DEBUG_IGNORE_LOG = True
@@ -115,3 +123,9 @@ if SUPPORT_CHANNEL and not re.match(r"^https?://", SUPPORT_CHANNEL):
 
 if SUPPORT_CHAT and not re.match(r"^https?://", SUPPORT_CHAT):
     raise SystemExit("[ERROR] - Invalid SUPPORT_CHAT URL. Must start with https://")
+
+if not BOT_TOKEN:
+    print("[WARNING] - BOT_TOKEN not found. Your bot will not start.")
+
+if not MONGO_DB_URI:
+    print("[WARNING] - MONGO_DB_URI not found. Your bot will not start.")
