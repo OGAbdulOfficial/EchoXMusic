@@ -38,18 +38,23 @@ def git():
         UPSTREAM_REPO = f"https://{GIT_USERNAME}:{config.GIT_TOKEN}@{TEMP_REPO}"
     else:
         UPSTREAM_REPO = config.UPSTREAM_REPO
+    
     try:
         repo = Repo()
         LOGGER(__name__).info(f"Git Client Found [VPS DEPLOYER]")
-    except GitCommandError:
-        LOGGER(__name__).info(f"Invalid Git Command")
-    except InvalidGitRepositoryError:
-        repo = Repo.init()
+    except (GitCommandError, InvalidGitRepositoryError):
+        LOGGER(__name__).warning("Git repository not found or git command failed. Skipping auto-update.")
+        return
+
+    try:
         if "origin" in repo.remotes:
             origin = repo.remote("origin")
         else:
             origin = repo.create_remote("origin", UPSTREAM_REPO)
+
+        LOGGER(__name__).info(f"Fetching updates from upstream repository...")
         origin.fetch()
+        
         repo.create_head(
             config.UPSTREAM_BRANCH,
             origin.refs[config.UPSTREAM_BRANCH],
@@ -58,15 +63,10 @@ def git():
             origin.refs[config.UPSTREAM_BRANCH]
         )
         repo.heads[config.UPSTREAM_BRANCH].checkout(True)
-        try:
-            repo.create_remote("origin", config.UPSTREAM_REPO)
-        except BaseException:
-            pass
+        
         nrs = repo.remote("origin")
-        nrs.fetch(config.UPSTREAM_BRANCH)
-        try:
-            nrs.pull(config.UPSTREAM_BRANCH)
-        except GitCommandError:
-            repo.git.reset("--hard", "FETCH_HEAD")
-        install_req("pip3 install --no-cache-dir -r requirements.txt")
-        LOGGER(__name__).info(f"Fetching updates from upstream repository...")
+        nrs.pull(config.UPSTREAM_BRANCH)
+        
+        LOGGER(__name__).info(f"Successfully updated from upstream.")
+    except Exception as e:
+        LOGGER(__name__).error(f"Failed to fetch updates from git: {e}")
