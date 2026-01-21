@@ -502,16 +502,19 @@ class Call:
 
     async def start(self) -> None:
         LOGGER(__name__).info("Starting PyTgCalls Clients...")
-        if config.STRING1:
-            await self.one.start()
-        if config.STRING2:
-            await self.two.start()
-        if config.STRING3:
-            await self.three.start()
-        if config.STRING4:
-            await self.four.start()
-        if config.STRING5:
-            await self.five.start()
+        assistants = [
+            (config.STRING1, self.one, 1),
+            (config.STRING2, self.two, 2),
+            (config.STRING3, self.three, 3),
+            (config.STRING4, self.four, 4),
+            (config.STRING5, self.five, 5),
+        ]
+        for string, client, index in assistants:
+            if string and client:
+                try:
+                    await client.start()
+                except Exception as e:
+                    LOGGER(__name__).error(f"Failed to start PyTgCalls Assistant {index}: {e}")
 
     @capture_internal_err
     async def ping(self) -> str:
