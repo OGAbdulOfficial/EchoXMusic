@@ -70,15 +70,19 @@ async def set_assistant_new(chat_id, number):
 async def set_assistant(chat_id):
     from AnnieXMedia.core.userbot import assistants
 
-    ran_assistant = random.choice(assistants)
-    assistantdict[chat_id] = ran_assistant
-    await assdb.update_one(
-        {"chat_id": chat_id},
-        {"$set": {"assistant": ran_assistant}},
-        upsert=True,
-    )
-    userbot = await get_client(ran_assistant)
-    return userbot
+    if assistants:
+        ran_assistant = random.choice(assistants)
+        assistantdict[chat_id] = ran_assistant
+        await assdb.update_one(
+            {"chat_id": chat_id},
+            {"$set": {"assistant": ran_assistant}},
+            upsert=True,
+        )
+        userbot = await get_client(ran_assistant)
+        return userbot
+    else:
+        userbot = await get_client(1)
+        return userbot
 
 
 async def get_assistant(chat_id: int) -> str:
@@ -111,14 +115,17 @@ async def get_assistant(chat_id: int) -> str:
 async def set_calls_assistant(chat_id):
     from AnnieXMedia.core.userbot import assistants
 
-    ran_assistant = random.choice(assistants)
-    assistantdict[chat_id] = ran_assistant
-    await assdb.update_one(
-        {"chat_id": chat_id},
-        {"$set": {"assistant": ran_assistant}},
-        upsert=True,
-    )
-    return ran_assistant
+    if assistants:
+        ran_assistant = random.choice(assistants)
+        assistantdict[chat_id] = ran_assistant
+        await assdb.update_one(
+            {"chat_id": chat_id},
+            {"$set": {"assistant": ran_assistant}},
+            upsert=True,
+        )
+        return ran_assistant
+    else:
+        return 1
 
 
 async def group_assistant(self, chat_id: int) -> int:
