@@ -1,4 +1,4 @@
-﻿# Authored By EchoX Networks © 2025
+# Authored By Certified Coders © 2025
 import asyncio
 import random
 import string
@@ -510,7 +510,7 @@ async def play_command(
                 )
                 await mystic.delete()
                 await message.reply_photo(
-                    photo=details["thumb"] or config.YOUTUBE_IMG_URL,
+                    photo=details["thumb"],
                     caption=_["play_10"].format(
                         details["title"].title(),
                         details["duration_min"],
@@ -529,7 +529,7 @@ async def play_command(
                 )
                 await mystic.delete()
                 await message.reply_photo(
-                    photo=details["thumb"] or config.YOUTUBE_IMG_URL,
+                    photo=details["thumb"],
                     caption=_["play_10"].format(
                         details["title"],
                         details["duration_min"],
