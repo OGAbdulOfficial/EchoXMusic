@@ -89,15 +89,15 @@ STICKERS = [
     "CAACAgUAAx0Cd6nKUAACASBl_rnalOle6g7qS-ry-aZ1ZpVEnwACgg8AAizLEFfI5wfykoCR4h4E",
     "CAACAgUAAx0Cd6nKUAACATJl_rsEJOsaaPSYGhU7bo7iEwL8AAPMDgACu2PYV8Vb8aT4_HUPHgQ",
 ]
-HELP_IMG_URL = "https://files.catbox.moe/yg2vky.jpg"
+HELP_IMG_URL = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800"
 PING_VID_URL = "https://files.catbox.moe/3ivvgo.mp4"
-PLAYLIST_IMG_URL = "https://files.catbox.moe/yhaja5.jpg"
+PLAYLIST_IMG_URL = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800"
 STATS_VID_URL = "https://telegra.ph/file/e2ab6106ace2e95862372.mp4"
-TELEGRAM_AUDIO_URL = "https://files.catbox.moe/mlztag.jpg"
-TELEGRAM_VIDEO_URL = "https://files.catbox.moe/tiss2b.jpg"
-STREAM_IMG_URL = "https://files.catbox.moe/1d3da7.jpg"
-SOUNCLOUD_IMG_URL = "https://files.catbox.moe/zhymxl.jpg"
-YOUTUBE_IMG_URL = "https://files.catbox.moe/veykzq.jpg"
+TELEGRAM_AUDIO_URL = "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800"
+TELEGRAM_VIDEO_URL = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800"
+STREAM_IMG_URL = "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800"
+SOUNCLOUD_IMG_URL = "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=800"
+YOUTUBE_IMG_URL = "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800"
 SPOTIFY_ARTIST_IMG_URL = SPOTIFY_ALBUM_IMG_URL = SPOTIFY_PLAYLIST_IMG_URL = YOUTUBE_IMG_URL
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
