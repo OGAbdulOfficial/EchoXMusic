@@ -249,27 +249,11 @@ class YouTubeAPI:
             or info.get("thumbnails", [{}])[-1].get("url", "")
         ).split("?")[0]
 
-        # Handle duration - can be string "3:45" or integer seconds
-        raw_duration = info.get("duration")
-        if isinstance(raw_duration, str) and raw_duration:
-            duration_min = raw_duration
-        elif isinstance(raw_duration, (int, float)) and raw_duration > 0:
-            # Convert seconds to MM:SS or HH:MM:SS format
-            total_seconds = int(raw_duration)
-            hours, remainder = divmod(total_seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            if hours > 0:
-                duration_min = f"{hours}:{minutes:02d}:{seconds:02d}"
-            else:
-                duration_min = f"{minutes}:{seconds:02d}"
-        else:
-            duration_min = None
-
         details = {
             "title": info.get("title", ""),
             "link": info.get("webpage_url", prepared_link),
             "vidid": info.get("id", ""),
-            "duration_min": duration_min,
+            "duration_min": info.get("duration"),  # Keep as-is from API
             "thumb": thumb,
         }
         return details, info.get("id", "")
