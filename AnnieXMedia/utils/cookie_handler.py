@@ -53,8 +53,13 @@ async def fetch_and_store_cookies():
 
     cookies = (response.text or "").strip()
 
+    # Auto-add Netscape header if missing but content looks like valid cookies
     if not cookies.startswith("# Netscape"):
-        raise ValueError("⚠️ ɪɴᴠᴀʟɪᴅ ᴄᴏᴏᴋɪᴇ ꜰᴏʀᴍᴀᴛ. ɴᴇᴇᴅs ɴᴇᴛsᴄᴀᴘᴇ ꜰᴏʀᴍᴀᴛ.")
+        # Check if it looks like cookie data (contains domain entries)
+        if ".youtube.com" in cookies or "youtube.com\t" in cookies:
+            cookies = "# Netscape HTTP Cookie File\n# This file was auto-fixed\n\n" + cookies
+        else:
+            raise ValueError("⚠️ ɪɴᴠᴀʟɪᴅ ᴄᴏᴏᴋɪᴇ ꜰᴏʀᴍᴀᴛ. ɴᴇᴇᴅs ɴᴇᴛsᴄᴀᴘᴇ ꜰᴏʀᴍᴀᴛ ᴏʀ ʏᴏᴜᴛᴜʙᴇ ᴄᴏᴏᴋɪᴇs.")
 
     if len(cookies) < 100:
         raise ValueError("⚠️ ᴄᴏᴏᴋɪᴇ ᴄᴏɴᴛᴇɴᴛ ᴛᴏᴏ sʜᴏʀᴛ. ᴘᴏssɪʙʟʏ ɪɴᴠᴀʟɪᴅ.")
