@@ -1,11 +1,11 @@
-﻿# Authored By Certified Coders © 2025
+﻿# Authored By EchoX Network © 2025
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from AnnieXMedia import app
 from config import BOT_USERNAME
 
 repo_caption = """**
-🚀 ᴄʟᴏɴᴇ ᴀɴᴅ ᴅᴇᴘʟᴏʏ – ᴄᴇʀᴛɪꜰɪᴇᴅ ᴄᴏᴅᴇʀꜱ ʀᴇᴘᴏ 🚀
+🚀 ᴄʟᴏɴᴇ ᴀɴᴅ ᴅᴇᴘʟᴏʏ – EᴄʜᴏX Mᴜsɪᴄ ʀᴇᴘᴏ 🚀
 
 ➤ ᴅᴇᴘʟᴏʏ ᴇᴀsɪʟʏ ᴏɴ ʜᴇʀᴏᴋᴜ ᴡɪᴛʜᴏᴜᴛ ᴇʀʀᴏʀꜱ  
 ➤ ɴᴏ ʜᴇʀᴏᴋᴜ ʙᴀɴ ɪꜱꜱᴜᴇ  
@@ -21,7 +21,7 @@ async def show_repo(_, msg):
     buttons = [
         [InlineKeyboardButton("➕ ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ ✨", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")],
         [
-            InlineKeyboardButton("👑 ᴏᴡɴᴇʀ", url="https://t.me/LoserNagiOfficial"),
+            InlineKeyboardButton("👑 ᴏᴡɴᴇʀ", url="https://t.me/OGAbdulOfficial"),
             InlineKeyboardButton("💬 ꜱᴜᴘᴘᴏʀᴛ", url="https://t.me/AbdulDevOfficialCommunity")
         ],
         [

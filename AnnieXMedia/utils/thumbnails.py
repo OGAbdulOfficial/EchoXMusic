@@ -63,8 +63,10 @@ async def get_thumb(videoid: str) -> str:
     except Exception:
         title, thumbnail, duration, views = "Unsupported Title", YOUTUBE_IMG_URL, None, "Unknown Views"
 
-    is_live = not duration or str(duration).strip().lower() in {"", "live", "live now"}
-    duration_text = "Live" if is_live else duration or "Unknown Mins"
+    # Only mark as live if explicitly a live stream (not just empty duration)
+    duration_str = str(duration).strip().lower() if duration else ""
+    is_live = duration_str in {"live", "live now"}
+    duration_text = "Live" if is_live else (duration or "Unknown Mins")
 
     # Download thumbnail
     thumb_path = os.path.join(CACHE_DIR, f"thumb{videoid}.png")
