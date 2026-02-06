@@ -48,7 +48,10 @@ async def get_thumb(videoid: str) -> str:
     if os.path.exists(cache_path):
         return cache_path
 
-    # YouTube video data fetch
+    # Direct YouTube thumbnail URL - always use actual video thumbnail
+    thumbnail = f"https://img.youtube.com/vi/{videoid}/maxresdefault.jpg"
+    
+    # YouTube video data fetch for title and metadata
     results = VideosSearch(f"https://www.youtube.com/watch?v={videoid}", limit=1)
     try:
         results_data = await results.next()
@@ -57,11 +60,10 @@ async def get_thumb(videoid: str) -> str:
             raise ValueError("No results found.")
         data = result_items[0]
         title = re.sub(r"\W+", " ", data.get("title", "Unsupported Title")).title()
-        thumbnail = data.get("thumbnails", [{}])[0].get("url", YOUTUBE_IMG_URL)
         duration = data.get("duration")
         views = data.get("viewCount", {}).get("short", "Unknown Views")
     except Exception:
-        title, thumbnail, duration, views = "Unsupported Title", YOUTUBE_IMG_URL, None, "Unknown Views"
+        title, duration, views = "Unsupported Title", None, "Unknown Views"
 
     # Only mark as live if explicitly a live stream (not just empty duration)
     duration_str = str(duration).strip().lower() if duration else ""
