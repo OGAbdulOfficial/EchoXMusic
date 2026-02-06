@@ -510,7 +510,7 @@ async def play_command(
                 )
                 await mystic.delete()
                 await message.reply_photo(
-                    photo=details["thumb"],
+                    photo=details["thumb"] or config.YOUTUBE_IMG_URL,
                     caption=_["play_10"].format(
                         details["title"].title(),
                         details["duration_min"],
@@ -529,7 +529,7 @@ async def play_command(
                 )
                 await mystic.delete()
                 await message.reply_photo(
-                    photo=details["thumb"],
+                    photo=details["thumb"] or config.YOUTUBE_IMG_URL,
                     caption=_["play_10"].format(
                         details["title"],
                         details["duration_min"],
