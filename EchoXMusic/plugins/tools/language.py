@@ -20,7 +20,7 @@
 # Email: badboy809075@gmail.com
 
 
-from pykeyboard import InlineKeyboard
+from EchoXMusic.utils.keyboard import InlineKeyboard
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, Message
 

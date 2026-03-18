@@ -20,8 +20,21 @@
 # Email: badboy809075@gmail.com
 
 
-from pykeyboard import InlineKeyboard
-from pyrogram.types import InlineKeyboardButton as Ikb
+from pyrogram.types import InlineKeyboardButton as Ikb, InlineKeyboardMarkup
+
+class InlineKeyboard(InlineKeyboardMarkup):
+    def __init__(self, row_width=2):
+        self.row_width = row_width
+        super().__init__(inline_keyboard=[])
+
+    def add(self, *args):
+        for i in range(0, len(args), self.row_width):
+            self.inline_keyboard.append(list(args[i:i + self.row_width]))
+        return self
+
+    def row(self, *args):
+        self.inline_keyboard.append(list(args))
+        return self
 
 from .functions import get_urls_from_text as is_url
 
