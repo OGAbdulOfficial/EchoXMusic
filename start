@@ -1,1 +1,1 @@
-startCommand: python3 -m EchoXMusic
+python3 -m EchoXMusic
