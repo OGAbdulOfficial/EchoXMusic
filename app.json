@@ -1,5 +1,5 @@
 {
-  "name": "Shruti Music",
+  "name": "EchoXMusic",
   "description": "A Telegram Music Player Bot, written in Python with Pyrogram and Py-Tgcalls.",
   "logo": "https://files.catbox.moe/v7hio8.jpg",
   "keywords": [
@@ -39,7 +39,7 @@
     },
     "BOT_USERNAME": {
       "description": "The username of your bot (without @)",
-      "value": "ShrutixMusicBot",
+      "value": "EchoXMusicBot",
       "required": true
     },
     "UPSTREAM_REPO": {

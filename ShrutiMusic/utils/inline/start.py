@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
+# Copyright (c) 2025 Nand Yaduwanshi <OGAbdulOfficial>
 # Location: Supaul, Bihar
 #
 # All rights reserved.
@@ -21,7 +21,7 @@
 
 from pyrogram.types import InlineKeyboardButton
 import config
-from ShrutiMusic import app
+from EchoXMusic import app
 
 def start_panel(_):
     buttons = [
@@ -98,11 +98,11 @@ def owner_panel(_):
     return buttons
 
 
-# ©️ Copyright Reserved - @NoxxOP  Nand Yaduwanshi
+# ©️ Copyright Reserved - @OGAbdulOfficial  Nand Yaduwanshi
 
 # ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @NoxxOP)
-# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
+# ©️ 2025 Nand Yaduwanshi (aka @OGAbdulOfficial)
+# 🔗 GitHub : https://github.com/OGAbdulOfficial/EchoXMusic
 # 📢 Telegram Channel : https://t.me/AbdulBotzOfficial
 # ===========================================
 

@@ -24,11 +24,11 @@ services:
       OWNER_ID:
         value: 7574330905
       OWNER_USERNAME:
-        value: WTF_WhyMeeh
+        value: OGAbdulOfficial
       BOT_USERNAME:
-        value: ShrutixMusicBot
+        value: EchoXMusicBot
       UPSTREAM_REPO:
-        value: https://github.com/NoxxOP/ShrutiMusic
+        value: https://github.com/OGAbdulOfficial/EchoXMusic
       STRING_SESSION:
         sync: false
       GIT_TOKEN:
@@ -48,7 +48,7 @@ services:
       YOUTUBE:
         value: https://youtube.com/@NandEditz
       GITHUB:
-        value: https://github.com/NoxxOP
+        value: https://github.com/OGAbdulOfficial
       DONATE:
         value: https://t.me/ShrutiBots/91
       START_IMG_URL:
