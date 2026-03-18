@@ -966,3 +966,18 @@ Don't forget to visit @EchoXMusic
 [19-Mar-26 02:18:17 - INFO] - EchoXMusic - Shruti Music Started Successfully.
 
 Don't forget to visit @ShrutiBots
+[19-Mar-26 02:21:11 - INFO] - EchoXMusic.core.mongo - Connecting to your Mongo Database...
+[19-Mar-26 02:21:11 - INFO] - EchoXMusic.core.mongo - Connected to your Mongo Database.
+[19-Mar-26 02:21:11 - INFO] - EchoXMusic.core.dir - Directories Updated.
+[19-Mar-26 02:21:11 - INFO] - EchoXMusic.core.git - Git Client Found [VPS DEPLOYER]
+[19-Mar-26 02:21:11 - INFO] - EchoXMusic.misc - Local Database Initialized.
+[19-Mar-26 02:21:11 - INFO] - EchoXMusic.core.bot - Starting bot...
+[19-Mar-26 02:21:14 - INFO] - EchoXMusic.misc - Sudoers Loaded.
+[19-Mar-26 02:21:20 - INFO] - EchoXMusic - Bot commands set successfully!
+[19-Mar-26 02:21:20 - INFO] - EchoXMusic.plugins - Successfully Imported Modules...
+[19-Mar-26 02:21:20 - INFO] - EchoXMusic.core.userbot - Starting Assistants...
+[19-Mar-26 02:21:24 - INFO] - EchoXMusic.core.call - Starting PyTgCalls Client...
+
+[19-Mar-26 02:21:32 - INFO] - EchoXMusic - Shruti Music Started Successfully.
+
+Don't forget to visit @ShrutiBots
