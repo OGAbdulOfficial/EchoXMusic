@@ -3331,7 +3331,7 @@ async def send_repo(_, message: Message):
             [
                 [
                     InlineKeyboardButton("📂 Management Bot", url="http://github.com/OGAbdulOfficial/EchoXMusic"),
-                    InlineKeyboardButton("📂 Music Bot", url="http://github.com/OGAbdulOfficial/ShrutixMusic")
+                    InlineKeyboardButton("📂 Music Bot", url="http://github.com/OGAbdulOfficial/EchoXMusic")
                 ]
             ]
         ),
