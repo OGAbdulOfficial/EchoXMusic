@@ -17,14 +17,14 @@ pytz
 pillow
 psutil
 py-tgcalls
-# pykeyboard
+pyrogram-keyboard
 kurigram==2.1.35
 python-dotenv
 pyyaml
 requests
 speedtest-cli
 spotipy
-# tgcrypto
+tgcrypto
 telegraph 
 unidecode
 youtube-search
