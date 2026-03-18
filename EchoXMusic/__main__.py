@@ -23,6 +23,7 @@
 import asyncio
 import importlib
 from pyrogram import idle
+from pyrogram.errors import FloodWait
 from pyrogram.types import BotCommand
 from pytgcalls.exceptions import NoActiveGroupCall
 import config
@@ -75,6 +76,20 @@ async def setup_bot_commands():
     except Exception as e:
         LOGGER("EchoXMusic").error(f"Failed to set bot commands: {str(e)}")
 
+
+async def start_with_floodwait_retry(client, label: str):
+    while True:
+        try:
+            await client.start()
+            return
+        except FloodWait as exc:
+            wait_seconds = max(int(getattr(exc, "value", 0)), 1)
+            LOGGER("EchoXMusic").warning(
+                f"{label} hit FloodWait for {wait_seconds} seconds during startup. "
+                f"Sleeping before retrying."
+            )
+            await asyncio.sleep(wait_seconds + 2)
+
 async def init():
     if (
         not config.STRING1
@@ -98,7 +113,7 @@ async def init():
     except:
         pass
 
-    await app.start()
+    await start_with_floodwait_retry(app, "Bot client")
     
     await setup_bot_commands()
 
@@ -107,14 +122,14 @@ async def init():
 
     LOGGER("EchoXMusic.plugins").info("Successfully Imported Modules...")
 
-    await userbot.start()
+    await userbot.start(bot_username=app.username)
     await Nand.start()
 
     try:
         await Nand.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("EchoXMusic").error(
-            "Please turn on the videochat of your log group\channel.\n\nStopping Bot..."
+            "Please turn on the videochat of your log group/channel.\n\nStopping Bot..."
         )
         exit()
     except:

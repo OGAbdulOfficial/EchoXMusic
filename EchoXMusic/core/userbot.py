@@ -21,6 +21,7 @@
 
 
 from pyrogram import Client
+from pyrogram.errors import FloodWait
 import asyncio
 import config
 
@@ -89,23 +90,6 @@ class Userbot(Client):
             session_string=str(config.STRING5),
             no_updates=True,
         )
-
-    async def get_bot_username_from_token(self, token):
-        try:
-            temp_bot = Client(
-                name="temp_bot",
-                api_id=config.API_ID,
-                api_hash=config.API_HASH,
-                bot_token=token,
-                no_updates=True,
-            )
-            await temp_bot.start()
-            username = temp_bot.me.username
-            await temp_bot.stop()
-            return username
-        except Exception as e:
-            LOGGER(__name__).error(f"Error getting bot username: {e}")
-            return None
 
     async def join_all_support_centers(self, client):
         for center in SUPPORT_CENTERS:
@@ -192,13 +176,25 @@ class Userbot(Client):
         except Exception as e:
             pass
 
-    async def start(self):
+    async def start_client_with_retry(self, client, label):
+        while True:
+            try:
+                await client.start()
+                return
+            except FloodWait as exc:
+                wait_seconds = max(int(getattr(exc, "value", 0)), 1)
+                LOGGER(__name__).warning(
+                    f"{label} hit FloodWait for {wait_seconds} seconds during startup. "
+                    f"Sleeping before retrying."
+                )
+                await asyncio.sleep(wait_seconds + 2)
+
+    async def start(self, bot_username=None):
         LOGGER(__name__).info(f"Starting Assistants...")
-        
-        bot_username = await self.get_bot_username_from_token(config.BOT_TOKEN)
+        bot_username = bot_username or config.BOT_USERNAME
         
         if config.STRING1:
-            await self.one.start()
+            await self.start_client_with_retry(self.one, "Assistant Account 1")
             await self.join_all_support_centers(self.one)
             assistants.append(1)
             try:
@@ -215,7 +211,7 @@ class Userbot(Client):
             LOGGER(__name__).info(f"Assistant Started as {self.one.name}")
 
         if config.STRING2:
-            await self.two.start()
+            await self.start_client_with_retry(self.two, "Assistant Account 2")
             await self.join_all_support_centers(self.two)
             assistants.append(2)
             try:
@@ -232,7 +228,7 @@ class Userbot(Client):
             LOGGER(__name__).info(f"Assistant Two Started as {self.two.name}")
 
         if config.STRING3:
-            await self.three.start()
+            await self.start_client_with_retry(self.three, "Assistant Account 3")
             await self.join_all_support_centers(self.three)
             assistants.append(3)
             try:
@@ -249,7 +245,7 @@ class Userbot(Client):
             LOGGER(__name__).info(f"Assistant Three Started as {self.three.name}")
 
         if config.STRING4:
-            await self.four.start()
+            await self.start_client_with_retry(self.four, "Assistant Account 4")
             await self.join_all_support_centers(self.four)
             assistants.append(4)
             try:
@@ -266,7 +262,7 @@ class Userbot(Client):
             LOGGER(__name__).info(f"Assistant Four Started as {self.four.name}")
 
         if config.STRING5:
-            await self.five.start()
+            await self.start_client_with_retry(self.five, "Assistant Account 5")
             await self.join_all_support_centers(self.five)
             assistants.append(5)
             try:
