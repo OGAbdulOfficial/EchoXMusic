@@ -3,7 +3,7 @@
 </p>
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=34&duration=4500&pause=1000&color=00D9FF&center=true&vCenter=true&width=1600&lines=𝐒𝐡𝐫𝐮𝐭𝐢+𝐌𝐮𝐬𝐢𝐜+𝐑𝐞𝐩𝐨+—+𝐋𝐢𝐠𝐡𝐭𝐭𝐧𝐢𝐧𝐠+𝐅𝐚𝐬𝐭+𝐌𝐮𝐬𝐢𝐜+𝐒𝐭𝐫𝐞𝐚𝐦𝐢𝐧𝐠+—+𝐍𝐨𝐰+𝐑𝐮𝐧𝐧𝐢𝐧𝐠+𝐨𝐧+𝐀𝐏𝐈!">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=34&duration=4500&pause=1000&color=00D9FF&center=true&vCenter=true&width=1600&lines=𝐄𝐜𝐡𝐨𝐗+𝐌𝐮𝐬𝐢𝐜+𝐑𝐞𝐩𝐨+—+𝐋𝐢𝐠𝐡𝐭𝐭𝐧𝐢𝐧𝐠+𝐅𝐚𝐬𝐭+𝐌𝐮𝐬𝐢𝐜+𝐒𝐭𝐫𝐞𝐚𝐦𝐢𝐧𝐠+—+𝐍𝐨𝐰+𝐑𝐮𝐧𝐧𝐢𝐧𝐠+𝐨𝐧+𝐀𝐏𝐈!">
 </div>
 
 ---
@@ -15,8 +15,8 @@
 > **𝐑𝐞𝐬𝐩𝐨𝐧𝐬𝐞 𝐓𝐢𝐦𝐞:** `1-3 seconds` | **𝐒𝐭𝐚𝐛𝐢𝐥𝐢𝐭𝐲:** `99.9% Uptime`
 
 [![Support Channel](https://img.shields.io/badge/Support%20Channel-black?style=for-the-badge&logo=telegram)](https://t.me/AbdulBotzOfficial)
-[![Support Group](https://img.shields.io/badge/Support%20Group-black?style=for-the-badge&logo=telegram)](https://t.me/ShrutiBotSupport)
-[![Owner](https://img.shields.io/badge/Owner-black?style=for-the-badge&logo=telegram)](https://t.me/WTF_WhyMeeh)
+[![Support Group](https://img.shields.io/badge/Support%20Group-black?style=for-the-badge&logo=telegram)](https://t.me/AbdulSupportBot)
+[![Owner](https://img.shields.io/badge/Owner-black?style=for-the-badge&logo=telegram)](https://t.me/OGAbdulOfficial)
 
 [![Forks](https://img.shields.io/github/forks/OGAbdulOfficial/EchoXMusic?color=black&logo=github&logoColor=black&style=for-the-badge)](https://github.com/OGAbdulOfficial/EchoXMusic/fork)
 [![Stars](https://img.shields.io/github/stars/OGAbdulOfficial/EchoXMusic?color=black&logo=github&logoColor=black&style=for-the-badge)](https://github.com/OGAbdulOfficial/EchoXMusic/stargazers)
@@ -34,7 +34,7 @@
 |:---:|:---:|:---:|
 | **𝐇𝐞𝐫𝐨𝐤𝐮** | [![Deploy](https://img.shields.io/badge/Deploy%20On%20Heroku-black?style=for-the-badge&logo=heroku)](https://dashboard.heroku.com/new?template=https://github.com/OGAbdulOfficial/EchoXMusic) | 𝐎𝐧𝐞-𝐂𝐥𝐢𝐜𝐤 𝐃𝐞𝐩𝐥𝐨𝐲 |
 | **𝐑𝐞𝐧𝐝𝐞𝐫** | [![Deploy](https://img.shields.io/badge/Deploy%20On%20Render-black?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/OGAbdulOfficial/EchoXMusic) | 𝟏𝟎𝟎% 𝐅𝐫𝐞𝐞 |
-| **𝐒𝐢𝐦𝐩𝐥𝐞 𝐁𝐨𝐭** | [![View](https://img.shields.io/badge/Simple%20Bot-black?style=for-the-badge&logo=github)](https://github.com/OGAbdulOfficial/ShrutixMusic) | 𝐋𝐢𝐠𝐡𝐭𝐰𝐞𝐢𝐠𝐡𝐭 |
+| **𝐒𝐢𝐦𝐩𝐥𝐞 𝐁𝐨𝐭** | [![View](https://img.shields.io/badge/Simple%20Bot-black?style=for-the-badge&logo=github)](https://github.com/OGAbdulOfficial/EchoXMusic) | 𝐋𝐢𝐠𝐡𝐭𝐰𝐞𝐢𝐠𝐡𝐭 |
 
 </div>
 
@@ -318,7 +318,7 @@ bash start
 
 | **𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐂𝐡𝐚𝐧𝐧𝐞𝐥** | **𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐆𝐫𝐨𝐮𝐩** |
 |:---:|:---:|
-| [![Channel](https://img.shields.io/badge/Join%20Channel-black?style=for-the-badge&logo=telegram)](https://t.me/AbdulBotzOfficial) | [![Group](https://img.shields.io/badge/Join%20Group-black?style=for-the-badge&logo=telegram)](https://t.me/ShrutiBotSupport) |
+| [![Channel](https://img.shields.io/badge/Join%20Channel-black?style=for-the-badge&logo=telegram)](https://t.me/AbdulBotzOfficial) | [![Group](https://img.shields.io/badge/Join%20Group-black?style=for-the-badge&logo=telegram)](https://t.me/AbdulSupportBot) |
 | Latest Updates | 24/7 Help & Support |
 
 ---
