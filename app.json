@@ -6,7 +6,7 @@
     "python3",
     "telegram",
     "bot",
-    "ShrutiBots",
+    "EchoXMusic",
     "MusicBot",
     "telegram-bot",
     "pyrogram"
@@ -44,7 +44,7 @@
     },
     "UPSTREAM_REPO": {
       "description": "URL of your GitHub repository",
-      "value": "https://github.com/NoxxOP/ShrutiMusic",
+      "value": "https://github.com/OGAbdulOfficial/EchoXMusic",
       "required": false
     },
     "STRING_SESSION": {
@@ -74,12 +74,12 @@
     },
     "SUPPORT_GROUP": {
       "description": "Your support group link",
-      "value": "https://t.me/ShrutiBotsupport",
+      "value": "https://t.me/EchoXMusicupport",
       "required": false
     },
     "SUPPORT_CHANNEL": {
       "description": "Your support channel link",
-      "value": "https://t.me/ShrutiBots",
+      "value": "https://t.me/EchoXMusic",
       "required": false
     },
     "INSTAGRAM": {
@@ -94,7 +94,7 @@
     },
     "GITHUB": {
       "description": "Your GitHub profile link or Any Link",
-      "value": "https://github.com/NoxxOP",
+      "value": "https://github.com/OGAbdulOfficial",
       "required": false
     },
     "DONATE": {

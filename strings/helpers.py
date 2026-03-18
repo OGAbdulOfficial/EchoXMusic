@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
+# Copyright (c) 2025 Nand Yaduwanshi <OGAbdulOfficial>
 # Location: Supaul, Bihar
 #
 # All rights reserved.
@@ -240,7 +240,7 @@ HELP_21 = """
 /vid : ᴅᴏᴡɴʟᴏᴀᴅ ᴀɴʏ ɪɴsᴛᴀ ᴛᴡɪᴛᴛᴇʀ ᴀɴᴅ ᴍᴏʀᴇ ᴘʟᴀᴛғᴏʀᴍs ᴠɪᴅᴇᴏ.
 """
 
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
+# Copyright (c) 2025 Nand Yaduwanshi <OGAbdulOfficial>
 
 # 🎯 TEXT TO SPEECH COMMANDS
 HELP_22 = """ 🔊 <b>TEXT TO SPEECH</b> 🎤
@@ -423,13 +423,13 @@ HELP_39 = """🎤 <b>VC LOGGER</b> 📢
 - <b>ᴡᴏʀᴋꜱ ᴡɪᴛʜ ᴀʟʟ ᴘʀᴇꜰɪxᴇꜱ (., !, /, @, ?, ')</b> 🔧
 """
 
-# ©️ Copyright Reserved - @NoxxOP  Nand Yaduwanshi
+# ©️ Copyright Reserved - @OGAbdulOfficial  Nand Yaduwanshi
 
 # ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @NoxxOP)
-# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
-# 📢 Telegram Channel : https://t.me/ShrutiBots
+# ©️ 2025 Nand Yaduwanshi (aka @OGAbdulOfficial)
+# 🔗 GitHub : https://github.com/OGAbdulOfficial/EchoXMusic
+# 📢 Telegram Channel : https://t.me/AbdulBotzOfficial
 # ===========================================
 
 
-# ❤️ Love From ShrutiBots 
+# ❤️ Love From EchoXMusic 

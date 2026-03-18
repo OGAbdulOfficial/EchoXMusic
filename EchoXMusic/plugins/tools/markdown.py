@@ -20,40 +20,36 @@
 # Email: badboy809075@gmail.com
 
 
-import os
-from typing import List
+from pyrogram.enums import ChatType, ParseMode
+from pyrogram.filters import command
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-import yaml
-
-languages = {}
-languages_present = {}
-
-
-def get_string(lang: str):
-    return languages[lang]
+from EchoXMusic import app
+from EchoXMusic.utils.functions import MARKDOWN
 
 
-for filename in os.listdir(r"./strings/langs/"):
-    if "en" not in languages:
-        languages["en"] = yaml.safe_load(
-            open(r"./strings/langs/en.yml", encoding="utf8")
+@app.on_message(command("markdownhelp"))
+async def mkdwnhelp(_, m: Message):
+    keyb = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text="Click Here!",
+                    url=f"http://t.me/{app.username}?start=mkdwn_help",
+                )
+            ]
+        ]
+    )
+    if m.chat.type != ChatType.PRIVATE:
+        await m.reply(
+            "ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ᴍᴀʀᴋᴅᴏᴡɴ ᴜsᴀɢᴇ sʏɴᴛᴀx ɪɴ ᴘᴍ!",
+            reply_markup=keyb,
         )
-        languages_present["en"] = languages["en"]["name"]
-    if filename.endswith(".yml"):
-        language_name = filename[:-4]
-        if language_name == "en":
-            continue
-        languages[language_name] = yaml.safe_load(
-            open(r"./strings/langs/" + filename, encoding="utf8")
+    else:
+        await m.reply(
+            MARKDOWN, parse_mode=ParseMode.HTML, disable_web_page_preview=True
         )
-        for item in languages["en"]:
-            if item not in languages[language_name]:
-                languages[language_name][item] = languages["en"][item]
-    try:
-        languages_present[language_name] = languages[language_name]["name"]
-    except:
-        print("There is some issue with the language file inside bot.")
-        exit()
+    return
 
 
 # ©️ Copyright Reserved - @OGAbdulOfficial  Nand Yaduwanshi
