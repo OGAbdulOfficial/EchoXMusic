@@ -18,7 +18,7 @@ HEROKU_APP_NAME = os.getenv("HEROKU_APP_NAME")
 HEROKU_API_KEY = os.getenv("HEROKU_API_KEY")
 
 UPSTREAM_REPO = os.getenv("UPSTREAM_REPO", "https://github.com/OGAbdulOfficial/EchoXMusic")
-UPSTREAM_BRANCH = os.getenv("UPSTREAM_BRANCH", "main")
+UPSTREAM_BRANCH = os.getenv("UPSTREAM_BRANCH", "master")
 GIT_TOKEN = os.getenv("GIT_TOKEN", None)
 
 SUPPORT_CHANNEL = os.getenv("SUPPORT_CHANNEL", "https://t.me/AbdulBotzOfficial")
