@@ -25,7 +25,6 @@ import os
 from datetime import datetime, timedelta
 from typing import Union
 
-from pyrogram import Client
 from pyrogram.types import InlineKeyboardMarkup
 from pytgcalls import PyTgCalls
 from pytgcalls.types import Update
@@ -67,55 +66,55 @@ async def _clear_(chat_id):
 
 class Call(PyTgCalls):
     def __init__(self):
-        self.userbot1 = Client(
-            name="NandAss1",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            session_string=str(config.STRING1),
+        # Reuse the already-started assistant clients from core.userbot instead of
+        # opening the same Telegram session twice. Running duplicate pyrogram
+        # clients against one session causes reconnect storms on Railway.
+        from EchoXMusic import userbot
+
+        self.userbot1 = userbot.one if config.STRING1 else None
+        self.one = (
+            PyTgCalls(
+                self.userbot1,
+                cache_duration=100,
+            )
+            if self.userbot1
+            else None
         )
-        self.one = PyTgCalls(
-            self.userbot1,
-            cache_duration=100,
+        self.userbot2 = userbot.two if config.STRING2 else None
+        self.two = (
+            PyTgCalls(
+                self.userbot2,
+                cache_duration=100,
+            )
+            if self.userbot2
+            else None
         )
-        self.userbot2 = Client(
-            name="NandAss2",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            session_string=str(config.STRING2),
+        self.userbot3 = userbot.three if config.STRING3 else None
+        self.three = (
+            PyTgCalls(
+                self.userbot3,
+                cache_duration=100,
+            )
+            if self.userbot3
+            else None
         )
-        self.two = PyTgCalls(
-            self.userbot2,
-            cache_duration=100,
+        self.userbot4 = userbot.four if config.STRING4 else None
+        self.four = (
+            PyTgCalls(
+                self.userbot4,
+                cache_duration=100,
+            )
+            if self.userbot4
+            else None
         )
-        self.userbot3 = Client(
-            name="NandAss3",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            session_string=str(config.STRING3),
-        )
-        self.three = PyTgCalls(
-            self.userbot3,
-            cache_duration=100,
-        )
-        self.userbot4 = Client(
-            name="NandAss4",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            session_string=str(config.STRING4),
-        )
-        self.four = PyTgCalls(
-            self.userbot4,
-            cache_duration=100,
-        )
-        self.userbot5 = Client(
-            name="NandAss5",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            session_string=str(config.STRING5),
-        )
-        self.five = PyTgCalls(
-            self.userbot5,
-            cache_duration=100,
+        self.userbot5 = userbot.five if config.STRING5 else None
+        self.five = (
+            PyTgCalls(
+                self.userbot5,
+                cache_duration=100,
+            )
+            if self.userbot5
+            else None
         )
 
     async def pause_stream(self, chat_id: int):
@@ -547,15 +546,15 @@ class Call(PyTgCalls):
 
     async def start(self):
         LOGGER(__name__).info("Starting PyTgCalls Client...\n")
-        if config.STRING1:
+        if self.one:
             await self.one.start()
-        if config.STRING2:
+        if self.two:
             await self.two.start()
-        if config.STRING3:
+        if self.three:
             await self.three.start()
-        if config.STRING4:
+        if self.four:
             await self.four.start()
-        if config.STRING5:
+        if self.five:
             await self.five.start()
 
     async def decorators(self):
