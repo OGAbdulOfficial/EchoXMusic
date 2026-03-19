@@ -53,6 +53,18 @@ def _format_play_exception(_, error: Exception):
     return str(error) if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
 
 
+async def _finalize_play_response(mystic, log_action=None):
+    try:
+        await mystic.delete()
+    except Exception:
+        LOGGER(__name__).error("Play status cleanup failed:\n%s", traceback.format_exc())
+    if log_action:
+        try:
+            await log_action
+        except Exception:
+            LOGGER(__name__).error("Play logging failed:\n%s", traceback.format_exc())
+
+
 @app.on_message(
     filters.command(
         [
@@ -137,7 +149,7 @@ async def play_commnd(
                 LOGGER(__name__).error("Play telegram-audio failed:\n%s", traceback.format_exc())
                 err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
-            return await mystic.delete()
+            return await _finalize_play_response(mystic)
         return
     elif video_telegram:
         if message.reply_to_message.document:
@@ -181,7 +193,7 @@ async def play_commnd(
                 LOGGER(__name__).error("Play telegram-video failed:\n%s", traceback.format_exc())
                 err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
-            return await mystic.delete()
+            return await _finalize_play_response(mystic)
         return
     elif url:
         if await YouTube.exists(url):
@@ -314,7 +326,7 @@ async def play_commnd(
                 LOGGER(__name__).error("Play soundcloud failed:\n%s", traceback.format_exc())
                 err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
-            return await mystic.delete()
+            return await _finalize_play_response(mystic)
         else:
             try:
                 await Nand.stream_call(url)
@@ -408,8 +420,9 @@ async def play_commnd(
             LOGGER(__name__).error("Play direct stream failed:\n%s", traceback.format_exc())
             err = _format_play_exception(_, e)
             return await mystic.edit_text(err)
-        await mystic.delete()
-        return await play_logs(message, streamtype=streamtype)
+        return await _finalize_play_response(
+            mystic, play_logs(message, streamtype=streamtype)
+        )
     else:
         if plist_type:
             ran_hash = "".join(
@@ -430,7 +443,9 @@ async def play_commnd(
                 caption=cap,
                 reply_markup=InlineKeyboardMarkup(buttons),
             )
-            return await play_logs(message, streamtype=f"Playlist : {plist_type}")
+            return await _finalize_play_response(
+                mystic, play_logs(message, streamtype=f"Playlist : {plist_type}")
+            )
         else:
             if slider:
                 buttons = slider_markup(
@@ -451,7 +466,9 @@ async def play_commnd(
                     ),
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
-                return await play_logs(message, streamtype=f"Searched on Youtube")
+                return await _finalize_play_response(
+                    mystic, play_logs(message, streamtype="Searched on Youtube")
+                )
             else:
                 buttons = track_markup(
                     _,
@@ -466,7 +483,9 @@ async def play_commnd(
                     caption=cap,
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
-                return await play_logs(message, streamtype=f"URL Searched Inline")
+                return await _finalize_play_response(
+                    mystic, play_logs(message, streamtype="URL Searched Inline")
+                )
 
 
 @app.on_callback_query(filters.regex("MusicStream") & ~BANNED_USERS)
@@ -535,7 +554,7 @@ async def play_music(client, CallbackQuery, _):
         LOGGER(__name__).error("Play callback music stream failed:\n%s", traceback.format_exc())
         err = _format_play_exception(_, e)
         return await mystic.edit_text(err)
-    return await mystic.delete()
+    return await _finalize_play_response(mystic)
 
 
 @app.on_callback_query(filters.regex("AnonymousAdmin") & ~BANNED_USERS)
@@ -633,7 +652,7 @@ async def play_playlists_command(client, CallbackQuery, _):
         LOGGER(__name__).error("Play callback playlist failed:\n%s", traceback.format_exc())
         err = _format_play_exception(_, e)
         return await mystic.edit_text(err)
-    return await mystic.delete()
+    return await _finalize_play_response(mystic)
 
 
 @app.on_callback_query(filters.regex("slider") & ~BANNED_USERS)
