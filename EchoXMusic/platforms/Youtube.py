@@ -39,6 +39,8 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "noplaylist": True,
             "nocheckcertificate": True,
         }
+        if os.path.exists("cookies.txt"):
+            ydl_opts["cookiefile"] = "cookies.txt"
     else:
         ydl_opts = {
             "format": "bestaudio/best",
@@ -54,6 +56,8 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
                 }
             ],
         }
+        if os.path.exists("cookies.txt"):
+            ydl_opts["cookiefile"] = "cookies.txt"
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:

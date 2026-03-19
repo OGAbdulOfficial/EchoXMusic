@@ -130,7 +130,8 @@ async def stream(
                     thumbnail,
                     vidid,
                 ) = await YouTube.details(search, False if spotify else True)
-            except:
+            except Exception as e:
+                LOGGER(__name__).error(f"Error fetching YouTube details for {search}: {e}")
                 continue
             if str(duration_min) == "None":
                 continue
@@ -160,7 +161,8 @@ async def stream(
                     file_path, direct = await YouTube.download(
                         vidid, mystic, video=status, videoid=True
                     )
-                except:
+                except Exception as e:
+                    LOGGER(__name__).error(f"Error downloading YouTube video {vidid}: {e}")
                     raise AssistantErr(_["play_14"])
                 file_path = _ensure_downloaded_media(file_path, _["play_14"])
                 await Nand.join_call(
@@ -232,7 +234,8 @@ async def stream(
             file_path, direct = await YouTube.download(
                 vidid, mystic, videoid=True, video=status
             )
-        except:
+        except Exception as e:
+            LOGGER(__name__).error(f"Error downloading YouTube video {vidid}: {e}")
             raise AssistantErr(_["play_14"])
         file_path = _ensure_downloaded_media(file_path, _["play_14"])
 
@@ -296,6 +299,9 @@ async def stream(
         file_path = result["filepath"]
         title = result["title"]
         duration_min = result["duration_min"]
+        
+        # Log soundcloud attempts
+        LOGGER(__name__).info(f"Streaming SoundCloud track: {title}")
         if await is_active_chat(chat_id):
             await put_queue(
                 chat_id,
