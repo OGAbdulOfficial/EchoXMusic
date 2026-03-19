@@ -22,8 +22,8 @@
 
 import asyncio
 from pyrogram import filters
-from pyrogram.enums import ChatMembersFilter, ParseMode
-from pyrogram.errors import FloodWait
+from pyrogram.enums import ChatMemberStatus, ChatMembersFilter, ChatType, ParseMode
+from pyrogram.errors import ChannelInvalid, FloodWait
 import random
 import re
 
@@ -78,13 +78,11 @@ def clean_text(text):
     return re.sub(r'([_*()~`>#+-=|{}.!])', r'\\1', text)
 
 async def is_admin(chat_id, user_id):
-    admin_ids = [
-        admin.user.id
-        async for admin in app.get_chat_members(
-            chat_id, filter=ChatMembersFilter.ADMINISTRATORS
-        )
-    ]
-    return user_id in admin_ids
+    member = await app.get_chat_member(chat_id, user_id)
+    return member.status in (
+        ChatMemberStatus.OWNER,
+        ChatMemberStatus.ADMINISTRATOR,
+    )
 
 async def process_members(chat_id, members, text=None, replied=None):
     tagged_members = 0
@@ -156,6 +154,9 @@ async def process_members(chat_id, members, text=None, replied=None):
     filters.command(["all", "allmention", "mentionall", "tagall"], prefixes=["/", "@"])
 )
 async def tag_all_users(_, message):
+    if message.chat.type not in (ChatType.GROUP, ChatType.SUPERGROUP):
+        return await message.reply_text("This command only works in groups and supergroups.")
+
     admin = await is_admin(message.chat.id, message.from_user.id)
     if not admin:
         return await message.reply_text("Only admins can use this command.")
@@ -199,6 +200,10 @@ Tagged members: {tagged_members}
 """
         await app.send_message(message.chat.id, summary_msg)
 
+    except ChannelInvalid:
+        await message.reply_text(
+            "I couldn't read members from this chat. Use this command in a group or supergroup."
+        )
     except FloodWait as e:  
         await asyncio.sleep(e.value)  
     except Exception as e:  
@@ -215,6 +220,9 @@ Tagged members: {tagged_members}
 async def tag_all_admins(_, message):
     if not message.from_user:
         return
+
+    if message.chat.type not in (ChatType.GROUP, ChatType.SUPERGROUP):
+        return await message.reply_text("This command only works in groups and supergroups.")
 
     admin = await is_admin(message.chat.id, message.from_user.id)  
     if not admin:  
@@ -261,6 +269,10 @@ Tagged admins: {tagged_admins}
 """
         await app.send_message(message.chat.id, summary_msg)
 
+    except ChannelInvalid:
+        await message.reply_text(
+            "I couldn't read admins from this chat. Use this command in a group or supergroup."
+        )
     except FloodWait as e:  
         await asyncio.sleep(e.value)  
     except Exception as e:  
@@ -286,6 +298,10 @@ Tagged admins: {tagged_admins}
 )
 async def cancelcmd(_, message):
     chat_id = message.chat.id
+
+    if message.chat.type not in (ChatType.GROUP, ChatType.SUPERGROUP):
+        return await message.reply_text("This command only works in groups and supergroups.")
+
     admin = await is_admin(chat_id, message.from_user.id)
     if not admin:
         return await message.reply_text("Only admins can use this command.")

@@ -80,14 +80,17 @@ async def settings_cb(client, CallbackQuery, _):
     except:
         pass
     buttons = setting_markup(_)
-    return await CallbackQuery.edit_message_text(
-        _["setting_1"].format(
-            app.mention,
-            CallbackQuery.message.chat.id,
-            CallbackQuery.message.chat.title,
-        ),
-        reply_markup=InlineKeyboardMarkup(buttons),
-    )
+    try:
+        return await CallbackQuery.edit_message_text(
+            _["setting_1"].format(
+                app.mention,
+                CallbackQuery.message.chat.id,
+                CallbackQuery.message.chat.title,
+            ),
+            reply_markup=InlineKeyboardMarkup(buttons),
+        )
+    except MessageNotModified:
+        return
 
 
 @app.on_callback_query(filters.regex("settingsback_helper") & ~BANNED_USERS)
@@ -99,18 +102,25 @@ async def settings_back_markup(client, CallbackQuery: CallbackQuery, _):
         pass
     if CallbackQuery.message.chat.type == ChatType.PRIVATE:
         await app.resolve_peer(OWNER_ID)
-        OWNER = OWNER_ID
         buttons = private_panel(_)
         UP, CPU, RAM, DISK = await bot_sys_stats()
-        return await CallbackQuery.edit_message_text(
-            _["start_2"].format(CallbackQuery.from_user.mention, app.mention, UP, DISK, CPU, RAM),
-            reply_markup=InlineKeyboardMarkup(buttons),
-        )
+        try:
+            return await CallbackQuery.edit_message_text(
+                _["start_2"].format(
+                    CallbackQuery.from_user.mention, app.mention, UP, DISK, CPU, RAM
+                ),
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
+        except MessageNotModified:
+            return
     else:
         buttons = setting_markup(_)
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
+        try:
+            return await CallbackQuery.edit_message_reply_markup(
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        except MessageNotModified:
+            return
 
 
 @app.on_callback_query(

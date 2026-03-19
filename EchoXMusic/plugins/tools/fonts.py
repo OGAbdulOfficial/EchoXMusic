@@ -2429,8 +2429,17 @@ async def style_buttons(c, m, cb=False):
         [InlineKeyboardButton("ɴᴇxᴛ ➻", callback_data="nxt")],
     ]
     if not cb:
+        if len(m.command) > 1:
+            preview_text = m.text.split(None, 1)[1]
+        elif m.reply_to_message and m.reply_to_message.text:
+            preview_text = m.reply_to_message.text
+        else:
+            return await m.reply_text(
+                "Use `/font your text` or reply to a text message with `/font`.",
+                quote=True,
+            )
         await m.reply_text(
-            text=m.text.split(None, 1)[1],
+            text=preview_text,
             reply_markup=InlineKeyboardMarkup(buttons),
             quote=True,
         )
@@ -2485,18 +2494,10 @@ async def nxt(c, m):
 async def style(c, m):
     await m.answer()
     cmd, style = m.data.split("+")
-    
-    # Check if the message is a reply
-    if m.message.reply_to_message:
-        try:
-            # Get the text from the replied message
-            text_to_style = m.message.reply_to_message.text.split(None, 1)[1]
-        except IndexError:
-            # Handle the case where there is no text after the command
-            await m.message.reply_text("Please provide text to style.")
-            return
-    else:
-        await m.message.reply_text("Please reply to a message with the text you want to style.")
+
+    text_to_style = m.message.text or m.message.caption
+    if not text_to_style:
+        await m.message.reply_text("Please provide text to style.")
         return
 
     # Determine the style class based on the selected style
