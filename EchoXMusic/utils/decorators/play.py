@@ -21,6 +21,7 @@
 
 
 import asyncio
+from datetime import datetime, timedelta
 
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
@@ -32,6 +33,7 @@ from pyrogram.errors import (
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from EchoXMusic import YouTube, app
+from EchoXMusic.core.mongo import mongodb
 from EchoXMusic.misc import SUDOERS
 from EchoXMusic.utils.database import (
     get_assistant,
@@ -49,8 +51,35 @@ from strings import get_string
 links = {}
 
 
+async def _acquire_play_request_lock(message) -> bool:
+    """Deduplicate a single /play message across multiple live bot instances."""
+    try:
+        now = datetime.utcnow()
+        collection = mongodb.play_request_locks
+        await collection.delete_many(
+            {"created_at": {"$lt": now - timedelta(minutes=30)}}
+        )
+        result = await collection.update_one(
+            {"_id": f"{message.chat.id}:{message.id}"},
+            {
+                "$setOnInsert": {
+                    "chat_id": message.chat.id,
+                    "message_id": message.id,
+                    "created_at": now,
+                }
+            },
+            upsert=True,
+        )
+        return result.upserted_id is not None
+    except Exception:
+        # If Mongo is briefly unavailable, don't block playback completely.
+        return True
+
+
 def PlayWrapper(command):
     async def wrapper(client, message):
+        if not await _acquire_play_request_lock(message):
+            return
         language = await get_lang(message.chat.id)
         _ = get_string(language)
         raw_text = message.text or message.caption or ""
