@@ -53,6 +53,7 @@ def PlayWrapper(command):
     async def wrapper(client, message):
         language = await get_lang(message.chat.id)
         _ = get_string(language)
+        raw_text = message.text or message.caption or ""
         if message.sender_chat:
             upl = InlineKeyboardMarkup(
                 [
@@ -125,7 +126,7 @@ def PlayWrapper(command):
         if message.command[0][0] == "v":
             video = True
         else:
-            if "-v" in message.text:
+            if "-v" in raw_text:
                 video = True
             else:
                 video = True if message.command[0][1] == "v" else None

@@ -75,6 +75,7 @@ async def play_commnd(
     url,
     fplay,
 ):
+    raw_text = message.text or message.caption or ""
     mystic = await message.reply_text(
         _["play_2"].format(channel) if channel else _["play_1"]
     )
@@ -351,7 +352,14 @@ async def play_commnd(
                 reply_markup=InlineKeyboardMarkup(buttons),
             )
         slider = True
-        query = message.text.split(None, 1)[1]
+        query_parts = raw_text.split(None, 1)
+        query = query_parts[1] if len(query_parts) > 1 else ""
+        if not query:
+            buttons = botplaylist_markup(_)
+            return await mystic.edit_text(
+                _["play_18"],
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
         if "-v" in query:
             query = query.replace("-v", "")
         try:

@@ -1,25 +1,3 @@
-# Copyright (c) 2025 Nand Yaduwanshi <OGAbdulOfficial>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
-
 from pyrogram.enums import ParseMode
 
 from EchoXMusic import app
@@ -28,40 +6,47 @@ from config import LOG_GROUP_ID
 
 
 async def play_logs(message, streamtype):
-    if await is_on_off(2):
-        logger_text = f"""
-<b>{app.mention} ᴘʟᴀʏ ʟᴏɢ</b>
-
-<b>ᴄʜᴀᴛ ɪᴅ :</b> <code>{message.chat.id}</code>
-<b>ᴄʜᴀᴛ ɴᴀᴍᴇ :</b> {message.chat.title}
-<b>ᴄʜᴀᴛ ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.chat.username}
-
-<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>
-<b>ɴᴀᴍᴇ :</b> {message.from_user.mention}
-<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}
-
-<b>ǫᴜᴇʀʏ :</b> {message.text.split(None, 1)[1]}
-<b>sᴛʀᴇᴀᴍᴛʏᴘᴇ :</b> {streamtype}"""
-        if message.chat.id != LOG_GROUP_ID:
-            try:
-                await app.send_message(
-                    chat_id=LOG_GROUP_ID,
-                    text=logger_text,
-                    parse_mode=ParseMode.HTML,
-                    disable_web_page_preview=True,
-                )
-            except:
-                pass
+    if not await is_on_off(2):
         return
 
+    raw_text = message.text or message.caption or ""
+    query_parts = raw_text.split(None, 1)
+    query = query_parts[1] if len(query_parts) > 1 else "N/A"
 
-# ©️ Copyright Reserved - @OGAbdulOfficial  Nand Yaduwanshi
+    chat_name = message.chat.title or getattr(message.chat, "first_name", None) or "Unknown Chat"
+    chat_username = (
+        f"@{message.chat.username}" if getattr(message.chat, "username", None) else "N/A"
+    )
 
-# ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @OGAbdulOfficial)
-# 🔗 GitHub : https://github.com/OGAbdulOfficial/EchoXMusic
-# 📢 Telegram Channel : https://t.me/AbdulBotzOfficial
-# ===========================================
+    user_id = message.from_user.id if message.from_user else "N/A"
+    user_mention = message.from_user.mention if message.from_user else "Unknown User"
+    user_username = (
+        f"@{message.from_user.username}"
+        if message.from_user and message.from_user.username
+        else "N/A"
+    )
 
+    logger_text = f"""
+<b>{app.mention} play log</b>
 
-# ❤️ Love From EchoXMusic 
+<b>chat id :</b> <code>{message.chat.id}</code>
+<b>chat name :</b> {chat_name}
+<b>chat username :</b> {chat_username}
+
+<b>user id :</b> <code>{user_id}</code>
+<b>name :</b> {user_mention}
+<b>username :</b> {user_username}
+
+<b>query :</b> {query}
+<b>streamtype :</b> {streamtype}"""
+
+    if message.chat.id != LOG_GROUP_ID:
+        try:
+            await app.send_message(
+                chat_id=LOG_GROUP_ID,
+                text=logger_text,
+                parse_mode=ParseMode.HTML,
+                disable_web_page_preview=True,
+            )
+        except Exception:
+            pass
