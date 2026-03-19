@@ -38,6 +38,12 @@ from EchoXMusic.utils.stream.queue import put_queue, put_queue_index
 from EchoXMusic.utils.thumbnails import gen_thumb
 
 
+def _ensure_downloaded_media(file_path, error_text):
+    if not file_path:
+        raise AssistantErr(error_text)
+    return file_path
+
+
 async def stream(
     _,
     mystic,
@@ -101,6 +107,7 @@ async def stream(
                     )
                 except:
                     raise AssistantErr(_["play_14"])
+                file_path = _ensure_downloaded_media(file_path, _["play_14"])
                 await Nand.join_call(
                     chat_id,
                     original_chat_id,
@@ -172,6 +179,7 @@ async def stream(
             )
         except:
             raise AssistantErr(_["play_14"])
+        file_path = _ensure_downloaded_media(file_path, _["play_14"])
 
         if await is_active_chat(chat_id):
             await put_queue(
