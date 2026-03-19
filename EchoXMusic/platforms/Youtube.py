@@ -1,4 +1,5 @@
 import asyncio
+import glob
 import os
 import re
 from typing import Union
@@ -16,6 +17,56 @@ except ImportError:
 
 API_URL = "https://abdulbotz.site"
 
+
+def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None:
+    download_dir = "downloads"
+    os.makedirs(download_dir, exist_ok=True)
+
+    # Clean up stale files for this id so we can resolve the final output path reliably.
+    for stale in glob.glob(os.path.join(download_dir, f"{video_id}.*")):
+        try:
+            os.remove(stale)
+        except OSError:
+            pass
+
+    outtmpl = os.path.join(download_dir, f"{video_id}.%(ext)s")
+    if as_video:
+        ydl_opts = {
+            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+            "outtmpl": outtmpl,
+            "merge_output_format": "mp4",
+            "quiet": True,
+            "noplaylist": True,
+            "nocheckcertificate": True,
+        }
+    else:
+        ydl_opts = {
+            "format": "bestaudio/best",
+            "outtmpl": outtmpl,
+            "quiet": True,
+            "noplaylist": True,
+            "nocheckcertificate": True,
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }
+            ],
+        }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([link])
+    except Exception as exc:
+        LOGGER(__name__).warning("yt-dlp fallback failed for %s: %s", video_id, exc)
+        return None
+
+    for candidate in glob.glob(os.path.join(download_dir, f"{video_id}.*")):
+        if os.path.isfile(candidate) and os.path.getsize(candidate) > 0:
+            return candidate
+    return None
+
 async def download_song(link: str) -> str:
     video_id = link.split('v=')[-1].split('&')[0] if 'v=' in link else link
 
@@ -32,50 +83,39 @@ async def download_song(link: str) -> str:
     try:
         async with aiohttp.ClientSession() as session:
             params = {"url": video_id, "type": "audio"}
-            
+
             async with session.get(
                 f"{API_URL}/download",
                 params=params,
                 timeout=aiohttp.ClientTimeout(total=7)
             ) as response:
-                if response.status != 200:
-                    return None
+                if response.status == 200:
+                    data = await response.json()
+                    download_token = data.get("download_token")
 
-                data = await response.json()
-                download_token = data.get("download_token")
-                
-                if not download_token:
-                    return None
-                
-                stream_url = f"{API_URL}/stream/{video_id}?type=audio&token={download_token}"
-                
-                async with session.get(
-                    stream_url,
-                    timeout=aiohttp.ClientTimeout(total=300)
-                ) as file_response:
-                    if file_response.status == 302:
-                        redirect_url = file_response.headers.get('Location')
-                        if redirect_url:
-                            async with session.get(redirect_url) as final_response:
-                                if final_response.status != 200:
-                                    return None
+                    if download_token:
+                        stream_url = f"{API_URL}/stream/{video_id}?type=audio&token={download_token}"
+
+                        async with session.get(
+                            stream_url,
+                            timeout=aiohttp.ClientTimeout(total=300)
+                        ) as file_response:
+                            if file_response.status == 302:
+                                redirect_url = file_response.headers.get('Location')
+                                if redirect_url:
+                                    async with session.get(redirect_url) as final_response:
+                                        if final_response.status == 200:
+                                            with open(file_path, "wb") as f:
+                                                async for chunk in final_response.content.iter_chunked(16384):
+                                                    f.write(chunk)
+                                            if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+                                                return file_path
+                            elif file_response.status == 200:
                                 with open(file_path, "wb") as f:
-                                    async for chunk in final_response.content.iter_chunked(16384):
+                                    async for chunk in file_response.content.iter_chunked(16384):
                                         f.write(chunk)
                                 if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
                                     return file_path
-                                else:
-                                    return None
-                    elif file_response.status == 200:
-                        with open(file_path, "wb") as f:
-                            async for chunk in file_response.content.iter_chunked(16384):
-                                f.write(chunk)
-                        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-                            return file_path
-                        else:
-                            return None
-                    else:
-                        return None
 
     except Exception:
         if os.path.exists(file_path):
@@ -83,7 +123,9 @@ async def download_song(link: str) -> str:
                 os.remove(file_path)
             except:
                 pass
-        return None
+        return _download_with_ytdlp(link, video_id, as_video=False)
+
+    return _download_with_ytdlp(link, video_id, as_video=False)
 
 async def download_video(link: str) -> str:
     video_id = link.split('v=')[-1].split('&')[0] if 'v=' in link else link
@@ -101,50 +143,39 @@ async def download_video(link: str) -> str:
     try:
         async with aiohttp.ClientSession() as session:
             params = {"url": video_id, "type": "video"}
-            
+
             async with session.get(
                 f"{API_URL}/download",
                 params=params,
                 timeout=aiohttp.ClientTimeout(total=7)
             ) as response:
-                if response.status != 200:
-                    return None
+                if response.status == 200:
+                    data = await response.json()
+                    download_token = data.get("download_token")
 
-                data = await response.json()
-                download_token = data.get("download_token")
-                
-                if not download_token:
-                    return None
-                
-                stream_url = f"{API_URL}/stream/{video_id}?type=video&token={download_token}"
-                
-                async with session.get(
-                    stream_url,
-                    timeout=aiohttp.ClientTimeout(total=600)
-                ) as file_response:
-                    if file_response.status == 302:
-                        redirect_url = file_response.headers.get('Location')
-                        if redirect_url:
-                            async with session.get(redirect_url) as final_response:
-                                if final_response.status != 200:
-                                    return None
+                    if download_token:
+                        stream_url = f"{API_URL}/stream/{video_id}?type=video&token={download_token}"
+
+                        async with session.get(
+                            stream_url,
+                            timeout=aiohttp.ClientTimeout(total=600)
+                        ) as file_response:
+                            if file_response.status == 302:
+                                redirect_url = file_response.headers.get('Location')
+                                if redirect_url:
+                                    async with session.get(redirect_url) as final_response:
+                                        if final_response.status == 200:
+                                            with open(file_path, "wb") as f:
+                                                async for chunk in final_response.content.iter_chunked(16384):
+                                                    f.write(chunk)
+                                            if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+                                                return file_path
+                            elif file_response.status == 200:
                                 with open(file_path, "wb") as f:
-                                    async for chunk in final_response.content.iter_chunked(16384):
+                                    async for chunk in file_response.content.iter_chunked(16384):
                                         f.write(chunk)
                                 if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
                                     return file_path
-                                else:
-                                    return None
-                    elif file_response.status == 200:
-                        with open(file_path, "wb") as f:
-                            async for chunk in file_response.content.iter_chunked(16384):
-                                f.write(chunk)
-                        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-                            return file_path
-                        else:
-                            return None
-                    else:
-                        return None
 
     except Exception:
         if os.path.exists(file_path):
@@ -152,7 +183,9 @@ async def download_video(link: str) -> str:
                 os.remove(file_path)
             except:
                 pass
-        return None
+        return _download_with_ytdlp(link, video_id, as_video=True)
+
+    return _download_with_ytdlp(link, video_id, as_video=True)
 
 async def shell_cmd(cmd):
     proc = await asyncio.create_subprocess_shell(
