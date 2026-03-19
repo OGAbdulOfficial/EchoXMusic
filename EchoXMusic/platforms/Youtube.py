@@ -91,7 +91,7 @@ async def download_song(link: str) -> str:
             async with session.get(
                 f"{API_URL}/download",
                 params=params,
-                timeout=aiohttp.ClientTimeout(total=7)
+                timeout=aiohttp.ClientTimeout(total=15)
             ) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -151,7 +151,7 @@ async def download_video(link: str) -> str:
             async with session.get(
                 f"{API_URL}/download",
                 params=params,
-                timeout=aiohttp.ClientTimeout(total=7)
+                timeout=aiohttp.ClientTimeout(total=15)
             ) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -239,14 +239,31 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        results = VideosSearch(link, limit=1)
-        for result in (await results.next())["result"]:
-            title = result["title"]
-            duration_min = result["duration"]
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-            vidid = result["id"]
-            duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
-        return title, duration_min, duration_sec, thumbnail, vidid
+        
+        try:
+            results = VideosSearch(link, limit=1)
+            for result in (await results.next())["result"]:
+                title = result["title"]
+                duration_min = result["duration"]
+                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+                vidid = result["id"]
+                duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
+            return title, duration_min, duration_sec, thumbnail, vidid
+        except Exception as e:
+            LOGGER(__name__).warning(f"VideosSearch failed for {link}: {e}. Falling back to yt-dlp.")
+            # Fallback to yt-dlp for details
+            try:
+                with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True}) as ydl:
+                    info = ydl.extract_info(link, download=False)
+                    title = info.get("title")
+                    duration_sec = info.get("duration", 0)
+                    duration_min = str(duration_sec // 60).zfill(2) + ":" + str(duration_sec % 60).zfill(2)
+                    thumbnail = info.get("thumbnail")
+                    vidid = info.get("id")
+                    return title, duration_min, duration_sec, thumbnail, vidid
+            except Exception as ex:
+                LOGGER(__name__).error(f"yt-dlp details fallback failed for {link}: {ex}")
+                raise ex
 
     async def title(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
