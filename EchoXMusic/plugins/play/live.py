@@ -20,9 +20,11 @@
 # Email: badboy809075@gmail.com
 
 
+import traceback
+
 from pyrogram import filters
 
-from EchoXMusic import YouTube, app
+from EchoXMusic import LOGGER, YouTube, app
 from EchoXMusic.utils.channelplay import get_channeplayCB
 from EchoXMusic.utils.decorators.language import languageCB
 from EchoXMusic.utils.stream.stream import stream
@@ -74,9 +76,9 @@ async def play_live_stream(client, CallbackQuery, _):
                 forceplay=ffplay,
             )
         except Exception as e:
-            print(f"Error: {e}")
+            LOGGER(__name__).error("Play live stream failed:\n%s", traceback.format_exc())
             ex_type = type(e).__name__
-            err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+            err = str(e) if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
             return await mystic.edit_text(err)
     else:
         return await mystic.edit_text("» ɴᴏᴛ ᴀ ʟɪᴠᴇ sᴛʀᴇᴀᴍ.")

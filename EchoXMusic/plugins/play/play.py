@@ -22,13 +22,14 @@
 
 import random
 import string
+import traceback
 
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
-from EchoXMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
+from EchoXMusic import Apple, LOGGER, Resso, SoundCloud, Spotify, Telegram, YouTube, app
 from EchoXMusic.core.call import Nand
 from EchoXMusic.utils import seconds_to_min, time_to_seconds
 from EchoXMusic.utils.channelplay import get_channeplayCB
@@ -45,6 +46,11 @@ from EchoXMusic.utils.inline import (
 from EchoXMusic.utils.logger import play_logs
 from EchoXMusic.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
+
+
+def _format_play_exception(_, error: Exception):
+    ex_type = type(error).__name__
+    return str(error) if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
 
 
 @app.on_message(
@@ -128,9 +134,8 @@ async def play_commnd(
                     forceplay=fplay,
                 )
             except Exception as e:
-                print(f"Error: {e}")
-                ex_type = type(e).__name__
-                err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+                LOGGER(__name__).error("Play telegram-audio failed:\n%s", traceback.format_exc())
+                err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
             return await mystic.delete()
         return
@@ -173,9 +178,8 @@ async def play_commnd(
                     forceplay=fplay,
                 )
             except Exception as e:
-                print(f"Error: {e}")
-                ex_type = type(e).__name__
-                err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+                LOGGER(__name__).error("Play telegram-video failed:\n%s", traceback.format_exc())
+                err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
             return await mystic.delete()
         return
@@ -307,9 +311,8 @@ async def play_commnd(
                     forceplay=fplay,
                 )
             except Exception as e:
-                print(f"Error: {e}")
-                ex_type = type(e).__name__
-                err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+                LOGGER(__name__).error("Play soundcloud failed:\n%s", traceback.format_exc())
+                err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
             return await mystic.delete()
         else:
@@ -322,7 +325,7 @@ async def play_commnd(
                     text=_["play_17"],
                 )
             except Exception as e:
-                print(f"Error: {e}")
+                LOGGER(__name__).error("Play URL validation/stream_call failed:\n%s", traceback.format_exc())
                 return await mystic.edit_text(_["general_2"].format(type(e).__name__))
             await mystic.edit_text(_["str_2"])
             try:
@@ -339,9 +342,8 @@ async def play_commnd(
                     forceplay=fplay,
                 )
             except Exception as e:
-                print(f"Error: {e}")
-                ex_type = type(e).__name__
-                err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+                LOGGER(__name__).error("Play index stream failed:\n%s", traceback.format_exc())
+                err = _format_play_exception(_, e)
                 return await mystic.edit_text(err)
             return await play_logs(message, streamtype="M3u8 or Index Link")
     else:
@@ -403,9 +405,8 @@ async def play_commnd(
                 forceplay=fplay,
             )
         except Exception as e:
-            print(f"Error: {e}")
-            ex_type = type(e).__name__
-            err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+            LOGGER(__name__).error("Play direct stream failed:\n%s", traceback.format_exc())
+            err = _format_play_exception(_, e)
             return await mystic.edit_text(err)
         await mystic.delete()
         return await play_logs(message, streamtype=streamtype)
@@ -531,9 +532,8 @@ async def play_music(client, CallbackQuery, _):
             forceplay=ffplay,
         )
     except Exception as e:
-        print(f"Error: {e}")
-        ex_type = type(e).__name__
-        err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+        LOGGER(__name__).error("Play callback music stream failed:\n%s", traceback.format_exc())
+        err = _format_play_exception(_, e)
         return await mystic.edit_text(err)
     return await mystic.delete()
 
@@ -630,9 +630,8 @@ async def play_playlists_command(client, CallbackQuery, _):
             forceplay=ffplay,
         )
     except Exception as e:
-        print(f"Error: {e}")
-        ex_type = type(e).__name__
-        err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+        LOGGER(__name__).error("Play callback playlist failed:\n%s", traceback.format_exc())
+        err = _format_play_exception(_, e)
         return await mystic.edit_text(err)
     return await mystic.delete()
 
