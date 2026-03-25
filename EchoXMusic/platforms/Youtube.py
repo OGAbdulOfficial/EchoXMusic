@@ -37,7 +37,7 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "merge_output_format": "mp4",
             "noplaylist": True,
             "nocheckcertificate": True,
-            "extractor_args": {"youtube": ["player_client=ios"]},
+            "extractor_args": {"youtube": ["player_client=android"]},
         }
         if os.path.exists("cookies.txt"):
             ydl_opts["cookiefile"] = "cookies.txt"
@@ -48,7 +48,7 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "quiet": True,
             "noplaylist": True,
             "nocheckcertificate": True,
-            "extractor_args": {"youtube": ["player_client=ios"]},
+            "extractor_args": {"youtube": ["player_client=android"]},
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
@@ -128,9 +128,9 @@ async def download_song(link: str) -> str:
                 os.remove(file_path)
             except:
                 pass
-        return _download_with_ytdlp(link, video_id, as_video=False)
+        return await asyncio.to_thread(_download_with_ytdlp, link, video_id, False)
 
-    return _download_with_ytdlp(link, video_id, as_video=False)
+    return await asyncio.to_thread(_download_with_ytdlp, link, video_id, False)
 
 async def download_video(link: str) -> str:
     video_id = link.split('v=')[-1].split('&')[0] if 'v=' in link else link
@@ -188,9 +188,9 @@ async def download_video(link: str) -> str:
                 os.remove(file_path)
             except:
                 pass
-        return _download_with_ytdlp(link, video_id, as_video=True)
+        return await asyncio.to_thread(_download_with_ytdlp, link, video_id, True)
 
-    return _download_with_ytdlp(link, video_id, as_video=True)
+    return await asyncio.to_thread(_download_with_ytdlp, link, video_id, True)
 
 async def shell_cmd(cmd):
     proc = await asyncio.create_subprocess_shell(
@@ -257,7 +257,7 @@ class YouTubeAPI:
                 ydl_opts = {
                     "quiet": True, 
                     "no_warnings": True, 
-                    "extractor_args": {"youtube": ["player_client=ios"]}
+                    "extractor_args": {"youtube": ["player_client=android"]}
                 }
                 if os.path.exists("cookies.txt"):
                     ydl_opts["cookiefile"] = "cookies.txt"
