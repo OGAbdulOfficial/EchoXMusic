@@ -37,7 +37,7 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "merge_output_format": "mp4",
             "noplaylist": True,
             "nocheckcertificate": True,
-            "javascript_runtime": "node",
+            "extractor_args": {"youtube": ["player_client=android,ios,web"]},
         }
         if os.path.exists("cookies.txt"):
             ydl_opts["cookiefile"] = "cookies.txt"
@@ -48,7 +48,7 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "quiet": True,
             "noplaylist": True,
             "nocheckcertificate": True,
-            "javascript_runtime": "node",
+            "extractor_args": {"youtube": ["player_client=android,ios,web"]},
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
@@ -254,7 +254,11 @@ class YouTubeAPI:
             LOGGER(__name__).warning(f"VideosSearch failed for {link}: {e}. Falling back to yt-dlp.")
             # Fallback to yt-dlp for details
             try:
-                ydl_opts = {"quiet": True, "no_warnings": True, "javascript_runtime": "node"}
+                ydl_opts = {
+                    "quiet": True, 
+                    "no_warnings": True, 
+                    "extractor_args": {"youtube": ["player_client=android,ios,web"]}
+                }
                 if os.path.exists("cookies.txt"):
                     ydl_opts["cookiefile"] = "cookies.txt"
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
