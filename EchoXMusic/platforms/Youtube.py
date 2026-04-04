@@ -322,14 +322,26 @@ class YouTubeAPI:
             link = self.listbase + link
         if "&" in link:
             link = link.split("&")[0]
-        playlist = await shell_cmd(
-            f"yt-dlp -i --get-id --flat-playlist --playlist-end {limit} --skip-download {link}"
-        )
+        
+        ydl_opts = {
+            "quiet": True,
+            "extract_flat": "in_playlist",
+            "playlist_items": f"1-{limit}",
+            "extractor_args": {"youtube": {"player_client": ["mweb", "web", "android"]}},
+            "sleep_interval_requests": 1,
+        }
+        if os.path.exists("cookies.txt"):
+            ydl_opts["cookiefile"] = "cookies.txt"
+            
         try:
-            result = [key for key in playlist.split("\n") if key]
-        except:
-            result = []
-        return result
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = await asyncio.to_thread(ydl.extract_info, link, download=False)
+                if 'entries' in info:
+                    return [entry['id'] for entry in info['entries'] if entry.get('id')]
+        except Exception as e:
+            LOGGER(__name__).warning(f"Playlist fetching failed for {link}: {e}")
+            return []
+        return []
 
     async def track(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
