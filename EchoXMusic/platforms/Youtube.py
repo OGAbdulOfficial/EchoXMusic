@@ -37,7 +37,8 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "merge_output_format": "mp4",
             "noplaylist": True,
             "nocheckcertificate": True,
-            "extractor_args": {"youtube": ["player_client=android"]},
+            "extractor_args": {"youtube": {"player_client": ["mweb", "web", "android"]}},
+            "sleep_interval_requests": 1,
         }
         if os.path.exists("cookies.txt"):
             ydl_opts["cookiefile"] = "cookies.txt"
@@ -48,7 +49,8 @@ def _download_with_ytdlp(link: str, video_id: str, as_video: bool) -> str | None
             "quiet": True,
             "noplaylist": True,
             "nocheckcertificate": True,
-            "extractor_args": {"youtube": ["player_client=android"]},
+            "extractor_args": {"youtube": {"player_client": ["mweb", "web", "android"]}},
+            "sleep_interval_requests": 1,
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
@@ -257,7 +259,8 @@ class YouTubeAPI:
                 ydl_opts = {
                     "quiet": True, 
                     "no_warnings": True, 
-                    "extractor_args": {"youtube": ["player_client=android"]}
+                    "extractor_args": {"youtube": {"player_client": ["mweb", "web", "android"]}},
+                    "sleep_interval_requests": 1,
                 }
                 if os.path.exists("cookies.txt"):
                     ydl_opts["cookiefile"] = "cookies.txt"
